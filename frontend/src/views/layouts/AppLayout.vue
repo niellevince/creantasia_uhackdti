@@ -1,12 +1,12 @@
 <template>
     <v-app id="inspire">
         <v-navigation-drawer v-model="drawer" app dark color="#142B40">
-            <div class="d-flex pa-4 align-center">
-                <div class="col-auto px-0">
+            <div class="d-flex  align-center">
+                <!-- <div class="col-auto px-0">
                     <v-img src="@/assets/logo.png" style="height: 35px; width: 70px; border-radius: 16px;" />
-                </div>
+                </div> -->
                 <div class="col">
-                    <h3 class="white--text">UHackDTI</h3>
+                    <h1 class="orange--text text-center">UHackDTI</h1>
                 </div>
             </div>
 

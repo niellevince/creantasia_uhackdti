@@ -55,6 +55,7 @@
         </v-card>
 
         <ProgressDialog :show="progressDialog.show" :title="progressDialog.title"></ProgressDialog>
+        <AlertDialog :show="alertDialog.show" :title="alertDialog.title" :subtitle="alertDialog.subtitle" @close="alertDialog.show = false"></AlertDialog>
     </v-dialog>
 </template>
 
@@ -69,6 +70,7 @@
 
 <script>
 import ProgressDialog from './ProgressDialog.vue';
+import AlertDialog from './AlertDialog.vue';
 export default {
     props: ["show", "title", "field", "files", "confirmText", "confirmColor", "businessId"],
     data: () => ({
@@ -76,13 +78,26 @@ export default {
             show: false,
             title: 'Uploading files'
         },
+        alertDialog: {
+            show: false,
+            title: 'Oops!',
+            subtitle: 'A single file should only be less than 5MB.',
+        },
         currentFiles: [],
     }),
     methods: {
         async uploadFiles(event) {
+            var files = event.target.files;
+
+            for (var f of files) {
+                if (f.size > 5000000) {
+                    this.alertDialog.show = true;
+                    return;
+                }
+            }
+
             this.progressDialog.show = true;
             xlog("Uploading files");
-            var files = event.target.files;
             xlog(files);
 
             if (files.length == 0) return;
@@ -120,7 +135,7 @@ export default {
     mounted() {
         this.currentFiles = this.files;
     },
-    components: { ProgressDialog }
+    components: { ProgressDialog, AlertDialog }
 };
 </script>
 

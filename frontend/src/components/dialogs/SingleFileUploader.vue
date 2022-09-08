@@ -17,43 +17,50 @@
                 </v-card-actions>
             </v-card>
         </v-form>
+
+        <ProgressDialog :show="progressDialog.show" :title="progressDialog.title"></ProgressDialog>
     </v-dialog>
 </template>
 
 <script>
+import ProgressDialog from './ProgressDialog.vue';
 export default {
     props: ["title", "subtitle", "show", "confirmText", "confirmColor"],
     data: () => ({
+        progressDialog: {
+            show: false,
+            title: 'Uploading file'
+        },
         valid: false,
         file: null,
         rules: [
             (value) => {
                 if (value == null) {
-                    return 'Please select a file';
+                    return "Please select a file";
                 }
                 return true;
-            }
+            },
+            value => !value || value.size < 5000000 || 'File size should be less than 5 MB!',
         ],
     }),
     methods: {
         async saveForm(e) {
             e.preventDefault();
             if (this.$refs.form.validate()) {
-
                 var formData = new FormData();
-                formData.append('file', this.file);
-                formData.append('folder', `/${this.currentUser.id}/businesses`)
-
-                var response = await this.post('/file/upload', formData);
-
-                if (response.status != 'success') {
+                formData.append("file", this.file);
+                formData.append("folder", `/${this.currentUser.id}/businesses`);
+                var response = await this.post("/file/upload", formData);
+                this.progressDialog.show = true;
+                if (response.status != "success") {
                     this.alertDialog.show = true;
-                    this.alertDialog.title = 'Oops!';
+                    this.alertDialog.title = "Oops!";
                     this.alertDialog.subtitle = response.message;
                     return;
                 }
-
                 this.file = null;
+                await this.sleep(1000);
+                this.progressDialog.show = false;
                 this.$emit("confirm", response.data.url);
             }
         },
@@ -61,6 +68,7 @@ export default {
             this.$emit("close");
         },
     },
+    components: { ProgressDialog }
 };
 </script>
 
