@@ -17,6 +17,7 @@ const routes = [
     { path: '/businesses', name: 'home', component: require('../views/users/lgu/Businesses.vue').default },
     { path: '/business-applications', name: 'business-applications', component: require('../views/users/lgu/Applications.vue').default },
     { path: '/transactions', name: 'transactions', component: require('../views/users/transactions/Transactions.vue').default },
+    { path: '/complaints', name: 'complaints', component: require('../views/users/lgu/Complaints.vue').default },
 
     { path: '*', component: require('../views/errors/PageNotFound.vue').default, name: '404', meta: { forAll: true } },
 ]

@@ -75,7 +75,7 @@ import ConfirmDialog from "@/components/dialogs/ConfirmDialog.vue";
 export default {
     components: { AppLayout, BusinessForm, ConfirmDialog },
     data: () => ({
-        pageTitle: 'Businessess',
+        pageTitle: 'Businesses',
         search: null,
         headers: [
             // { text: 'ID', value: 'id' },

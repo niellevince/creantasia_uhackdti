@@ -52,5 +52,8 @@ Route.post('/lgu/business/add', auth, BusinessController.add);
 Route.post('/lgu/business/save', auth, BusinessController.save);
 Route.post('/lgu/business/pay-fee', auth, BusinessController.payFee);
 
+// Complaints
+const ComplaintController = require('../controllers/http/lgu/ComplaintController');
+Route.post('/lgu/complaint/list', ComplaintController.list);
 
 module.exports = Route;

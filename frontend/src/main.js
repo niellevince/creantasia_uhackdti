@@ -32,7 +32,6 @@ Vue.mixin({
                 (v) => /.+@.+/.test(v) || "E-mail must be valid",
             ],
             mobileRules: [
-                (v) => !!v || "Enter a valid mobile number",
                 (v) => !isNaN(this.mobile) || "Enter a valid mobile number",
                 (v) => {
                     if (v == null) {
