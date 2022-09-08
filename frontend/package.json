@@ -1,0 +1,38 @@
+{
+    "name": "creant_core_vue",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "serve": "vue-cli-service serve",
+        "build": "vue-cli-service build"
+    },
+    "dependencies": {
+        "aegis-web-sdk": "^1.36.2",
+        "axios": "^0.27.2",
+        "core-js": "^3.8.3",
+        "cors": "^2.8.5",
+        "html5-qrcode": "^2.2.1",
+        "moment": "^2.29.4",
+        "moment-timezone": "^0.5.34",
+        "qrcode": "^1.5.1",
+        "socket.io-client": "^4.5.1",
+        "trtc-js-sdk": "^4.14.2",
+        "vue": "^2.6.14",
+        "vue-cookies": "^1.8.1",
+        "vue-router": "^3.5.1",
+        "vue-socket.io": "^3.0.10",
+        "vuetify": "^2.6.0",
+        "vuex": "^3.6.2"
+    },
+    "devDependencies": {
+        "@vue/cli-plugin-babel": "~5.0.0",
+        "@vue/cli-plugin-router": "~5.0.0",
+        "@vue/cli-plugin-vuex": "~5.0.0",
+        "@vue/cli-service": "~5.0.0",
+        "sass": "^1.32.7",
+        "sass-loader": "^12.0.0",
+        "vue-cli-plugin-vuetify": "~2.5.1",
+        "vue-template-compiler": "^2.6.14",
+        "vuetify-loader": "^1.7.0"
+    }
+}
