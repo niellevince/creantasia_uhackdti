@@ -7,10 +7,14 @@
                         <v-card-title primary-title>
                             <div class="row">
                                 <div class="col pr-0">
-                                    <v-text-field v-model="search" placeholder="Search by complaint id, complainant, email, mobile, or category" outlined dense single-line hide-details style="border-radius: 8px" prepend-inner-icon="mdi-magnify"></v-text-field>
+                                    <v-text-field v-model="search"
+                                        placeholder="Search by complaint id, complainant, email,or mobile"
+                                        outlined dense single-line hide-details style="border-radius: 8px"
+                                        prepend-inner-icon="mdi-magnify"></v-text-field>
                                 </div>
                                 <div class=" col-auto">
-                                    <v-btn color="blue darken-1" dark elevation="0" height="40" style="border-radius: 8px" class="mr-3" @click="complaintDialog = true">
+                                    <v-btn color="blue darken-1" dark elevation="0" height="40"
+                                        style="border-radius: 8px" class="mr-3" @click="complaintDialog = true">
                                         Add Complaint
                                     </v-btn>
                                     <!-- <v-btn color="success" dark elevation="0" height="40" style="border-radius: 8px">
@@ -48,30 +52,55 @@
                     </v-card-title>
 
                     <v-card-text>
-                        <v-text-field name="email" label="Email" v-model="formData.email" :rules="emailRules" required outlined :readonly="currentUser.role != 'user'"></v-text-field>
-                        <v-text-field name="mobile" label="Mobile Number" v-model="formData.mobile" :rules="requiredRules" required outlined :readonly="currentUser.role != 'user'"></v-text-field>
-                        <v-text-field name="category" label="Category" v-model="formData.category" :rules="requiredRules" required outlined :readonly="currentUser.role != 'user'"></v-text-field>
-                        <v-text-field name="subject" label="Subject" v-model="formData.subject" :rules="requiredRules" required outlined :readonly="currentUser.role != 'user'"></v-text-field>
-                        <v-text-field name="message" label="Message" v-model="formData.message" :rules="requiredRules" required outlined :readonly="currentUser.role != 'user'"></v-text-field>
-                        <v-text-field name="files" label="Files" v-model="formData.files" :rules="requiredRules" required outlined :readonly="currentUser.role != 'user'"></v-text-field>
+                        <v-text-field name="email" label="Contact Email" v-model="formData.email" :rules="emailRules" required
+                            outlined :readonly="currentUser.role != 'user'"></v-text-field>
+                        <v-text-field name="mobile" label="Contact Mobile Number" v-model="formData.mobile"
+                            :rules="requiredRules" required outlined :readonly="currentUser.role != 'user'">
+                        </v-text-field>
+                        <!-- <v-text-field name="category" label="Category" v-model="formData.category"
+                            :rules="requiredRules" required outlined :readonly="currentUser.role != 'user'">
+                        </v-text-field> -->
+                        <v-text-field name="subject" label="Subject" v-model="formData.subject" :rules="requiredRules"
+                            required outlined :readonly="currentUser.role != 'user'"></v-text-field>
+                        <!-- <v-text-field ></v-text-field> -->
+                        <V-textarea name="message" label="Message" v-model="formData.message" :rules="requiredRules"
+                            required outlined :readonly="currentUser.role != 'user'" rows="2"></V-textarea>
+                        <!-- <v-text-field name="files" label="Files" v-model="formData.files" :rules="requiredRules"
+                            required outlined :readonly="currentUser.role != 'user'"></v-text-field> -->
+                        <v-file-input name="files" label="Attachments" v-model="formData.files" :rules="fileRules"
+                            required outlined :readonly="currentUser.role != 'user'" multiple show-size></v-file-input>
                     </v-card-text>
 
                     <v-card-actions class="pa-6">
                         <v-spacer></v-spacer>
-                        <v-btn @click="complaintDialog=false" color="warning"> DONE </v-btn>
-                        <v-btn @click="complaintDialog=false" color="success"> PRINT </v-btn>
+                        <v-btn @click="complaintDialog=false" text> Cancel </v-btn>
+                        <v-btn color="success" type="submit"> Submit </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-form>
         </v-dialog>
+
+        <AlertDialog :show="alertDialog.show" :title="alertDialog.title" :subtitle="alertDialog.subtitle" @close="alertDialog.show = false"></AlertDialog>
+        <ProgressDialog :show="progressDialog.show" :title="progressDialog.title"></ProgressDialog>
     </AppLayout>
 </template>
 
 <script>
 import AppLayout from "@/views/layouts/AppLayout.vue";
+import AlertDialog from "@/components/dialogs/AlertDialog.vue";
+import ProgressDialog from "@/components/dialogs/ProgressDialog.vue";
 export default {
-    components: { AppLayout },
+    components: { AppLayout, AlertDialog, ProgressDialog },
     data: () => ({
+        progressDialog: {
+            show: false,
+            title: 'Uploading files'
+        },
+        alertDialog: {
+            show: false,
+            title: 'Oops!',
+            subtitle: 'A single file should only be less than 5MB.',
+        },
         pageTitle: 'Complaints',
         search: null,
         complaintDialog: false,
@@ -106,7 +135,16 @@ export default {
         },
         valid: false,
 
-        //
+        fileRules: [
+            (value)=> {
+                for (var f of value) {
+                if (f.size > 5000000) {
+                    return 'A single file must be less than 5MB';
+                }
+            }
+                return true
+            }
+        ],
 
         formData: {
             uid: null,
@@ -144,14 +182,29 @@ export default {
             e.preventDefault();
             if (this.$refs.form.validate()) {
                 this.progressDialog.show = true;
-                // var response = await this.post('/lgu/business/save', this.formData);
-                // this.progressDialog.show = false;
-                // if (response.status != 'success') {
-                //     this.alertDialog.show = true;
-                //     this.alertDialog.title = 'Oops!';
-                //     this.alertDialog.subtitle = response.message;
-                //     return;
-                // }
+
+                var formData = new FormData();
+                for (var f of this.formData.files) {
+                    formData.append("files", f);
+                }
+
+                formData.append("folder", `/${this.currentUser.id}/complaints`);
+                formData.append('uid', this.formData.uid)
+                formData.append('email', this.formData.email)
+                formData.append('mobile', this.formData.mobile)
+                formData.append('category', this.formData.category)
+                formData.append('subject', this.formData.subject)
+                formData.append('message', this.formData.message)
+
+
+                var response = await this.post('/lgu/complaint/create', formData);
+                this.progressDialog.show = false;
+                if (response.status != 'success') {
+                    this.alertDialog.show = true;
+                    this.alertDialog.title = 'Oops!';
+                    this.alertDialog.subtitle = response.message;
+                    return;
+                }
                 this.alertDialog = {
                     show: true,
                     title: 'Success',

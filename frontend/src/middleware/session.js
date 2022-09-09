@@ -4,7 +4,10 @@ export default async function session(router, next) {
     var response = await axios({
         method: 'POST',
         url: `${process.env.VUE_APP_BACKEND}/user/current`,
-        withCredentials: true,
+        // withCredentials: true,
+        headers: {
+            'Authorization': process.env.VUE_APP_DEVELOPMENT == 'true' ? `Bearer ${localStorage.token}` : null,
+        }
     });
 
     if (response.data.status != 'unauthorized') {

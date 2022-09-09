@@ -63,7 +63,7 @@ Vue.mixin({
                 method: 'POST',
                 url: `${process.env.VUE_APP_BACKEND}${url}`,
                 data: data ?? {},
-                withCredentials: true,
+                // withCredentials: true,
                 headers: {
                     'Authorization': process.env.VUE_APP_DEVELOPMENT == 'true' ? `Bearer ${localStorage.token}` : null,
                 }

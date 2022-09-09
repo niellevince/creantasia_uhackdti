@@ -21,10 +21,10 @@ mongoose.connect(dbUri, (err) => {
 
 const origins = [
     process.env.APP_FRONT_END,
-    'http://192.168.110.75:8080',
-    'http://192.168.110.75:8081',
-    'http://192.168.110.75:8082',
-    'http://192.168.110.75:8083',
+    'http://192.168.110.160:8080',
+    'http://192.168.110.160:8081',
+    'http://192.168.110.160:8082',
+    'http://192.168.110.160:8083',
     'http://192.168.56.1:81'
 ];
 
@@ -35,8 +35,8 @@ server.listen(process.env.APP_PORT, () => {
 });
 
 const config = {
-    origin: origins,
-    credentials: true,
+    origin: '*',
+    // credentials: true,
 }
 
 app.use(cors(config))

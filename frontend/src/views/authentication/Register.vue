@@ -70,7 +70,7 @@ export default {
                     return;
                 }
                 this.$store.state.token = response.data;
-                if (process.env.VUE_APP_DEVELOPMENT == 'true') localStorage.token = response.data;
+                if (process.env.VUE_APP_DEVELOPMENT == 'true') localStorage.token = response.data.token;
                 this.$router.push({ name: 'home' })
             }
         },

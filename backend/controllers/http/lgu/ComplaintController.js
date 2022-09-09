@@ -19,7 +19,7 @@ class AddessController {
         let rules = {
             email: 'required',
             mobile: 'required',
-            category: 'required',
+            // category: 'required',
             subject: 'required',
             message: 'required',
             files: 'required',
@@ -38,7 +38,7 @@ class AddessController {
         var complaint = new Complaint({
 
         });
-        await complaint.save();
+        // await complaint.save();
 
         res.send({
             'status': 'success',
